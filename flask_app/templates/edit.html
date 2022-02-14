@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav>
+            {% block menu %} {% include 'menu.html' %} {% endblock menu %}
+        </nav>
+    </header>
+    <main>
+        <div class = "headline">
+            <h1>Welcome {{session.first_name}}!</h1>   
+        
+            <div class = 'options'>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </div>        
+        </div>
+
+        <h1>Edit Recipe</h1>
+
+        <form action="/recipes/update" method="POST">
+
+            <label for="name">Name:</label>
+            <input type="text" name="name" value = "{{recipe.name}}">
+
+            <label for="description">Description:</label>
+            <input type="textarea" name="description" value = "{{recipe.description}}">
+
+            <label for="instructions">Instructions:</label>
+            <input type="textarea" name="instructions" value = "{{recipe.instructions}}">
+
+            <label for="date_made_on">Date Made On:</label>
+            <input type="datetime" name="date_made_on" value = "{{recipe.date_made_on}}">
+
+            <label for = "Yes">Yes:</label>
+            <input type="radio" name="under_30_min">
+            
+            <label for="No">No:</label>
+            <input type="radio" name="under_30_min">
+
+            <input type="hidden" name = "recipe_id" value = "{{recipe.id}}">
+
+            <input type="submit" value="Update">
+        </form>
+
+    </div>
+
+    </main>
+    <footer>
+
+    </footer>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js')}}"></script>
+</body>
+</html>

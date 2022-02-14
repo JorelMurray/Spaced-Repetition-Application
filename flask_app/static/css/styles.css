@@ -1,0 +1,13 @@
+main {
+    width: 900px;
+    margin: 0% 15%;
+    display: flex;
+    justify-content: center;
+}
+.headline {
+    width: 100%;
+
+}
+.formbox {
+    display: block;
+}

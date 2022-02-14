@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <title>Document</title>
+</head>
+<body>
+    <header>
+        <nav>
+            {% block menu %} {% include 'menu.html' %} {% endblock menu %}
+        </nav>
+    </header>
+    <main>
+        <div class = "headline">
+            <h1>Welcome {{current_user['first_name']}}!</h1>   
+        
+            <div class = 'options'>
+                <a href="/recipes/new">Create</a>
+                <a href="/logout">Logout</a>
+            </div>        
+        </div>
+
+        <div class = "formbox">
+        <h2>These are the recipes</h2>
+        <h3><a href="/user/{{session.user_id}}/">Your recipes</a></h3>
+        
+        <table>
+            <tr>
+                <td>Name</td>
+                <td>Under 30 Minutes?</td>
+                <td>Actions</td>
+            </tr>
+            {%for item in all_recipes%}
+                <tr>
+                    <td>{{item['name']}}</td>
+                    <td>{{item['under_30_min']}}</td>
+                    <td><a href="/recipes/{{item['id']}}">view instructions</a> <a href="/recipes/edit/{{item['id']}}">edit</a> <a href="/recipes/delete/{{item['id']}}">delete</a></td>
+                </tr>
+            {%endfor%}
+        </table>
+        </div>
+    </main>
+    <footer>
+
+    </footer>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/scripts.js')}}"></script>
+</body>
+</html>
