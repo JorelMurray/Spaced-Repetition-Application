@@ -4,7 +4,7 @@ from flask import flash
 from flask_app.models import item
 import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
-
+#This is a git test
 class Project:
     db = 'soloproject'
 
