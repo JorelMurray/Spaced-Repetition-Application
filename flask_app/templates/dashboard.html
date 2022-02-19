@@ -10,34 +10,36 @@
 <body>
     <header>
         <nav>
-            {% block menu %} {% include 'menu.html' %} {% endblock menu %}
+            <div class = 'options'>
+                <button><a href="/pies">Pie Derby</a></button>
+                <button><a href="/logout">Logout</a></button>
+            </div>     
         </nav>
     </header>
     <main>
-        <div class = "headline">
-            <h1>Welcome {{current_user['first_name']}}!</h1>   
-        
-            <div class = 'options'>
-                <a href="/recipes/new">Create</a>
-                <a href="/logout">Logout</a>
-            </div>        
-        </div>
-
+        <!--- {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+            <!--- {% if messages %}                            <!-- check if there are any messages -->
+                <!--- {% for message in messages %}            <!-- loop through the messages -->
+                    <!--- <p>{{message}}</p>                  <!-- display each message in a paragraph tag -->
+                <!--- {% endfor %}
+            {% endif %} 
+        {% endwith %} -->
+    
         <div class = "formbox">
-        <h2>These are the recipes</h2>
-        <h3><a href="/user/{{session.user_id}}/">Your recipes</a></h3>
+        <h1>Welcome {{session.firstName}}</h1> 
+        <h2>Your Projects</h2>
         
         <table>
             <tr>
-                <td>Name</td>
-                <td>Under 30 Minutes?</td>
-                <td>Actions</td>
+                <td>Project</td>
+                <td>Description</td>
+                <td>View Project</td>
             </tr>
-            {%for item in all_recipes%}
+            {%for project in projectList%}
                 <tr>
-                    <td>{{item['name']}}</td>
-                    <td>{{item['under_30_min']}}</td>
-                    <td><a href="/recipes/{{item['id']}}">view instructions</a> <a href="/recipes/edit/{{item['id']}}">edit</a> <a href="/recipes/delete/{{item['id']}}">delete</a></td>
+                    <td>{{project['name']}}</td>
+                    <td>{{project['description']}}</td>
+                    <td><a href="/viewproject/{{project['id']}}">View</a></td>
                 </tr>
             {%endfor%}
         </table>

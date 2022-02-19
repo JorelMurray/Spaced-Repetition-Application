@@ -3,11 +3,47 @@ main {
     margin: 0% 15%;
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 .headline {
-    width: 100%;
+    display: block;
+    width: 100%; 
 
 }
 .formbox {
     display: block;
+    margin-right: 20px;
+    border: 2px solid black;
+    text-align: center;
+    width: 250px;
+    padding: 5px;
+}
+.login {
+    margin: 20px;
+}
+input {
+    display: block;
+} 
+form {
+    border: 2px solid black;
+    width: 250px;
+    padding:5px;
+}
+table, td {
+    border: 2px solid black;
+}
+nav {
+    width: 800px;
+    margin: 0% 15%;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: right;
+    justify-content: right;
+}
+.loginNav {
+    width: 800px;
+    margin: 0% 15%;
+    display: flex;
+    align-items: right;
+    justify-content: center;
 }

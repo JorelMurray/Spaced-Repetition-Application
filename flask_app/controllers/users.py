@@ -31,9 +31,9 @@ def login():
         flash("Invalid Password")
         return redirect('/')
     # if the passwords matched, we set the user_id into session
-    session['user_id'] = user_in_db.id
-    session['first_name'] = user_in_db.first_name
-    session['last_name'] = user_in_db.last_name
+    session['userId'] = user_in_db.id
+    session['firstName'] = user_in_db.first_name
+    session['lastName'] = user_in_db.last_name
     session['email'] = user_in_db.email
 
 
@@ -48,18 +48,20 @@ def register():
     if not isValid:
         return redirect('/')
 
-
+    print('passed validation')
     data = {
-        'first_name' : request.form['fname'],
-        'last_name' : request.form['lname'],
+        'firstName' : request.form['fname'],
+        'lastName' : request.form['lname'],
         'email' : request.form['email'],
         'password' : bcrypt.generate_password_hash(request.form['password'])
     }
 
-    session['user_id'] = User.addUser(data)
-    session['first_name'] = request.form['fname']
-    session['last_name'] = request.form['lname']
+    session['userId'] = User.addUser(data)
+    session['firstName'] = request.form['fname']
+    session['lastName'] = request.form['lname']
     session['email'] = request.form['email']
+
+    print('created user and added to session')
 
     return redirect ('/dashboard')
 
@@ -70,14 +72,3 @@ def logout():
 
     return redirect('/')
 
-@app.route('/user/<int:user_id>/')
-def viewUserProjects(user_id):
-    if 'user_id' not in session:
-        flash('Please log in')
-        return redirect('/')
-    else:
-        data = {
-            'id': user_id
-        }
-        myprojects = User.userProjects(data)
-        return render_template('viewUserProjects.html', projectList = myprojects)

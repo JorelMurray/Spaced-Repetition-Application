@@ -6,29 +6,29 @@ import re
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
 class User:
-    db = 'login_registration'
+    db = 'soloproject'
 
     def __init__( self , data ):
         self.id = data['id']
         self.first_name = data['firstName']
         self.last_name = data['lastName']
-        self.email = data['Email']
-        self.password = data['Password']
-        self.created_at = data['createdAt']
-        self.updated_at = data['updatedAt']
-        projects = []
+        self.email = data['email']
+        self.password = data['password']
+        self.createdDate = data['createdDate']
+        self.updatedDate = data['updatedDate']
+        self.projects = []
 
     
     @classmethod
     def addUser(cls, data ):
-        query = "INSERT INTO users ( first_name , last_name , email , password, created_at, updated_at ) VALUES ( %(first_name)s , %(last_name)s , %(email)s , %(password)s, NOW() , NOW());"
+        query = "INSERT INTO users ( firstName , lastName , email , password, createdDate, updatedDate ) VALUES ( %(firstName)s , %(lastName)s , %(email)s , %(password)s, NOW() , NOW());"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
     
     @classmethod
     def get_by_email(cls,data):
-        query = "SELECT * FROM users WHERE Email = %(email)s;"
+        query = "SELECT * FROM users WHERE email = %(email)s;"
         result = connectToMySQL(User.db).query_db(query,data)
 
         # Didn't find a matching user
@@ -38,7 +38,7 @@ class User:
     
     @classmethod
     def getOne(cls,data):
-        query = "SELECT * FROM users WHERE Email = %(id)s;"
+        query = "SELECT * FROM users WHERE id = %(id)s;"
         result = connectToMySQL(User.db).query_db(query,data)
 
         # Didn't find a matching user
@@ -56,7 +56,7 @@ class User:
             result = connectToMySQL(User.db).query_db(query, user)
             print(len(result))
             if not EMAIL_REGEX.match(user['loginEmail']):
-                flash("Must enter a valid loginemail address")
+                flash("Must enter a valid email address")
                 is_valid = False
 
 
@@ -93,16 +93,16 @@ class User:
 
     @classmethod
     def userProjects(cls,data):
-        query = "select * from users left join projects on users.id = projects.userId WHERE users.id = %(id)s"
+        query = "select * from users left join projects on users.id = projects.userId WHERE users.id = %(id)s order by projectName desc"
         result = connectToMySQL(cls.db).query_db(query, data)
         user = cls(result[0])
         for row in result:
             data = {
                 "id" : row['projects.id'],
-                "description" : row['projectName'],
-                "instructions" : row['description'],
-                "date_made_on" : row['createdDate'],
-                "under_30_min" : row['updatedDate'],
+                "projectName" : row['projectName'],
+                "description" : row['description'],
+                "createdDate" : row['createdDate'],
+                "updatedDate" : row['updatedDate'],
                 "userId" : row['userId']
 
             }
