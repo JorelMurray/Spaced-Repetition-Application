@@ -16,7 +16,7 @@ def addItem():
 def createItem():
 
     return render_template("index.html")
-
+    
 @app.route('/edititem')
 def editItem():
     pass

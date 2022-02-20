@@ -3,6 +3,7 @@ from mysqlconnection import connectToMySQL
 from flask import flash
 from flask_app.models import project
 import re
+import pandas as pd
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
 class Item:
@@ -21,7 +22,12 @@ class Item:
 
     
     @classmethod
-    def addItem(cls, data ):
+    def addItem(cls, f, data ):
+
+        df = pd.read_excel(f)
+
+        return print(df)
+
         query = "INSERT INTO items ( first_name , last_name , email , password, created_at, updated_at ) VALUES ( %(first_name)s , %(last_name)s , %(email)s , %(password)s, NOW() , NOW());"
         
         # data is a dictionary that will be passed into the save method from server.py

@@ -3,6 +3,7 @@ from mysqlconnection import connectToMySQL
 from flask import flash
 from flask_app.models import item
 import re
+import pandas as pd
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 #This is a git test
 class Project:
@@ -19,21 +20,31 @@ class Project:
 
     
     @classmethod
-    def addProject(cls, data ):
-        query = "INSERT INTO projects ( first_name , last_name , email , password, created_at, updated_at ) VALUES ( %(first_name)s , %(last_name)s , %(email)s , %(password)s, NOW() , NOW());"
-        
-        # data is a dictionary that will be passed into the save method from server.py
-        return connectToMySQL(cls.db).query_db( query, data )
-    
-    @classmethod
-    def get_by_email(cls,data):
-        query = "SELECT * FROM projects WHERE Email = %(email)s;"
-        result = connectToMySQL(Project.db).query_db(query,data)
+    def addProject(cls, f, data ):
+        df = pd.read_excel(f)
 
-        # Didn't find a matching user
-        if len(result) < 1:
-            return False
-        return cls(result[0])
+
+        query = "INSERT INTO projects ( projectName , description , createdDate, updatedDate, userId ) VALUES ( %(projectName)s , %(description)s , NOW() , NOW(), %(userId)s);"
+    
+        pID = connectToMySQL(cls.db).query_db( query, data)
+
+        print(f"added project: {pID}")
+
+
+        for ind in df.index:
+            item = {
+                'itemName' : df['itemName'][ind],
+                'category' : df['category'][ind],
+                'projectId': pID
+            }
+            print(item)
+            query = "INSERT INTO items ( itemName , category , masteryLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'Not Started', 0, NOW() , NOW(), %(projectId)s);"
+            connectToMySQL(cls.db).query_db( query, item )
+
+        print("added items:")
+
+        return pID
+    
     
     @classmethod
     def getOne(cls,data):
@@ -92,7 +103,7 @@ class Project:
 
     @classmethod
     def projectItems(cls,data):
-        query = "select * from users left join recipes on users.id = recipes.User_id WHERE users.id = %(id)s"
+        query = "select * from users left join projects on users.id = recipes.User_id WHERE users.id = %(id)s"
         result = connectToMySQL(cls.db).query_db(query, data)
         project = cls(result[0])
         for row in result:
@@ -119,7 +130,7 @@ class Project:
         return connectToMySQL(cls.db).query_db( query, data )
 
     @classmethod
-    def allProjects(cls):
+    def userProjects(cls):
         query = "SELECT * FROM projects"
         result = connectToMySQL(Project.db).query_db(query)
 

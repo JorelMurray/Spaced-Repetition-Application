@@ -1,5 +1,5 @@
 from flask_app import app
-from flask import Flask, render_template, request, redirect, session, flash
+from flask import Flask, render_template, request, redirect, session, flash, url_for
 from flask_app.models.user import User
 from flask_app.models.project import Project
 from flask_app.models.item import Item
@@ -20,23 +20,47 @@ def dashboard():
 
     return render_template("dashboard.html", allProjects = User.userProjects(data))
 
-@app.route('/viewproject/<int:projectId>/')
-def viewproject():
-    pass
+@app.route('/viewproject/<int:pID>/')
+def viewproject(pID):
+    if 'userId' not in session:
+        flash('Please log in')
+        return redirect('/')
+    else:
+        data = {
+            'id': session['userId'] 
+        }
 
     return render_template("index.html")
+
 
 @app.route('/newproject')
 def newproject():
-    pass
+    if 'userId' not in session:
+        flash('Please log in')
+        return redirect('/')
 
-    return render_template("index.html")
+
+    return render_template("newproject.html")
 
 @app.route('/createproject', methods = ['POST'])
-def createProject():
-    pass
+def upload_file():
+    if 'userId' not in session:
+        flash('Please log in')
+        return redirect('/')
+    else:
+        data = {
+            'userId': session['userId'], 
+            'projectName' : request.form['name'],
+            'description' : request.form['description']
+        }
 
-    return render_template("index.html")
+    f = request.files['file']
+
+    pID = Project.addProject(f, data)
+
+    print("finished adding project/items")
+
+    return redirect (f"/viewproject/{pID}/")
 
 @app.route('/projectanalytics')
 def projectAnalytics():
