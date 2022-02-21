@@ -96,6 +96,7 @@ class User:
         query = "select * from users left join projects on users.id = projects.userId WHERE users.id = %(id)s order by projectName desc"
         result = connectToMySQL(cls.db).query_db(query, data)
         user = cls(result[0])
+        print(user)
         for row in result:
             data = {
                 "id" : row['projects.id'],
@@ -108,6 +109,7 @@ class User:
             }
             temp = project.Project(data)
             user.projects.append(temp)
+            print(user.projects)
         return user
 
     @classmethod

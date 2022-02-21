@@ -15,7 +15,7 @@
                 <button><a href="/logout">Logout</a></button>
                 <button><a href="/projectanalytics">Show Analytics</a></button>
                 <button><a href="/spacedrepetition">Spaced Repetition Generator</a></button>
-                <button><a href="/additem">Add Item</a></button>
+                <button><a href="/additem/{{currentProject.id}}">Add Item</a></button>
             </div>     
         </nav>
     </header>
@@ -53,7 +53,7 @@
                 <tr>
                     <td>{{item['itemName']}}</td>
                     <td>{{item['category']}}</td>
-                    <td><a href="/edititem/{{item['id']}}">Edit</a></td>
+                    <td><a href="/edititem/{{currentProject.id}}/{{item['id']}}">Edit</a></td>
                     <td><a href="/deleteitem/{{currentProject.id}}/{{item['id']}}">Delete</a></td>
                     <td>{{item['status']}}</td>
                     <td>{%if item['status'] != "New"%}<a href="/reviewitem/{{item['id']}}">Review</a>{%else%}<a href="/attemptitem/{{item['id']}}">Attempt</a>{%endif%}</td>

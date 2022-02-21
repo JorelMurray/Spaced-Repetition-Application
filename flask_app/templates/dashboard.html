@@ -35,9 +35,10 @@
                 <td>Description</td>
                 <td>View Project</td>
             </tr>
-            {%for project in projectList%}
+
+            {%for project in projectList.projects%}
                 <tr>
-                    <td>{{project['name']}}</td>
+                    <td>{{project['projectName']}}</td>
                     <td>{{project['description']}}</td>
                     <td><a href="/viewproject/{{project['id']}}">View</a></td>
                 </tr>

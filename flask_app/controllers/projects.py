@@ -7,7 +7,7 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
 
-@app.route('/dashboard')
+@app.route('/dashboard') 
 def dashboard():
     if 'userId' not in session:
         flash('Please log in')
@@ -17,7 +17,7 @@ def dashboard():
             'id': session['userId'] 
         }
 
-    return render_template("dashboard.html", allProjects = User.userProjects(data))
+    return render_template("dashboard.html", projectList = User.userProjects(data))
 
 @app.route('/viewproject/<int:pID>/')
 def viewproject(pID):

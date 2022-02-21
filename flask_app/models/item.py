@@ -22,13 +22,9 @@ class Item:
 
     
     @classmethod
-    def addItem(cls, f, data ):
+    def addItem(cls, data ):
 
-        df = pd.read_excel(f)
-
-        return print(df)
-
-        query = "INSERT INTO items ( first_name , last_name , email , password, created_at, updated_at ) VALUES ( %(first_name)s , %(last_name)s , %(email)s , %(password)s, NOW() , NOW());"
+        query = "INSERT INTO items ( itemName , category , masteryLevel , status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'New', 0, NOW() , NOW(), %(pID)s);"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )

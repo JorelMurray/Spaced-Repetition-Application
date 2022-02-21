@@ -7,15 +7,29 @@ from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
 
-@app.route('/additem')
-def addItem():
+@app.route('/additem/<int:pID>')
+def addItem(pID):
+    if 'userId' not in session:
+        flash('Please log in')
+        return redirect('/')    
 
-    return render_template("additem.html")
+    return render_template("newitem.html", pID = pID)
 
 @app.route('/createitem', methods = ['POST'])
 def createItem():
+    if 'userId' not in session:
+        flash('Please log in')
+        return redirect('/')
 
-    return render_template("index.html")
+    data = {
+        "itemName" : request.form['itemName'],
+        "category" : request.form['category'],
+        "pID" : request.form['pID']
+    }
+
+    Item.addItem(data)
+
+    return redirect(f"/viewproject/{request.form['pID']}/")
 
 @app.route('/importitems', methods = ['POST'])
 def importItems():
@@ -34,13 +48,14 @@ def importItems():
 
     return redirect (f"/viewproject/{pID}/")
     
-@app.route('/edititem/<int:pID>/<int:itemID>')
+@app.route('/edititem/<int:pID>/<int:itemID>/')
 def editItem(pID, itemID):
     if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
+
     data = {
-        id : itemID
+        "id" : itemID
     }
 
     return render_template("edititem.html", currentItem = Item.getOne(data), pID = pID)
