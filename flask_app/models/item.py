@@ -35,13 +35,30 @@ class Item:
     
     @classmethod
     def getOne(cls,data):
-        query = "SELECT * FROM items WHERE Email = %(id)s;"
+        query = "SELECT * FROM items WHERE id = %(id)s;"
         result = connectToMySQL(Item.db).query_db(query,data)
 
         # Didn't find a matching user
         if len(result) < 1:
             return False
         return cls(result[0])
+    
+    @classmethod
+    def importItems(cls, pID, f):
+
+        df = pd.read_excel(f)
+        for ind in df.index:
+                item = {
+                    'itemName' : df['itemName'][ind],
+                    'category' : df['category'][ind],
+                    'projectId': pID
+                }
+                print(item)
+                query = "INSERT INTO items ( itemName , category , masteryLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'New', 0, NOW() , NOW(), %(projectId)s);"
+                connectToMySQL(cls.db).query_db( query, item )
+            
+        return pID
+
 
     @staticmethod
     def validate(item, formType):
@@ -115,6 +132,13 @@ class Item:
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
+
+    @classmethod
+    def updateItem(cls, data):
+
+        query = "UPDATE items SET itemName = %(itemName)s, category = %(category)s WHERE id = %(id)s"
+
+        return connectToMySQL(cls.db).query_db( query, data ) 
 
     @classmethod
     def allItems(cls):

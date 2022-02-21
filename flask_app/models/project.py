@@ -16,35 +16,20 @@ class Project:
         self.createdDate = data['createdDate']
         self.updatedDate = data['updatedDate']
         self.userId = data['userId']
-        items = []
+        self.items = [] 
 
     
     @classmethod
     def addProject(cls, f, data ):
-        df = pd.read_excel(f)
-
 
         query = "INSERT INTO projects ( projectName , description , createdDate, updatedDate, userId ) VALUES ( %(projectName)s , %(description)s , NOW() , NOW(), %(userId)s);"
     
         pID = connectToMySQL(cls.db).query_db( query, data)
 
-        print(f"added project: {pID}")
-
-
-        for ind in df.index:
-            item = {
-                'itemName' : df['itemName'][ind],
-                'category' : df['category'][ind],
-                'projectId': pID
-            }
-            print(item)
-            query = "INSERT INTO items ( itemName , category , masteryLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'Not Started', 0, NOW() , NOW(), %(projectId)s);"
-            connectToMySQL(cls.db).query_db( query, item )
-
-        print("added items:")
+        if f.filename != '':
+            item.Item.importItems(pID,f)
 
         return pID
-    
     
     @classmethod
     def getOne(cls,data):
@@ -103,7 +88,7 @@ class Project:
 
     @classmethod
     def projectItems(cls,data):
-        query = "select * from users left join projects on users.id = recipes.User_id WHERE users.id = %(id)s"
+        query = "select * from projects left join items on projects.id = items.projectId WHERE projects.id = %(id)s"
         result = connectToMySQL(cls.db).query_db(query, data)
         project = cls(result[0])
         for row in result:
@@ -116,7 +101,7 @@ class Project:
                 "attempts" : row['attempts'],
                 "createdDate" : row['createdDate'],
                 "updatedDate" : row['updatedDate'],
-                "projectId" : row['projectId']
+                "projectId" : row['projectId'] 
             }
             temp = item.Item(data)
             project.items.append(temp)

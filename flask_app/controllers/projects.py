@@ -17,7 +17,6 @@ def dashboard():
             'id': session['userId'] 
         }
 
-
     return render_template("dashboard.html", allProjects = User.userProjects(data))
 
 @app.route('/viewproject/<int:pID>/')
@@ -27,10 +26,10 @@ def viewproject(pID):
         return redirect('/')
     else:
         data = {
-            'id': session['userId'] 
+            'id': pID
         }
 
-    return render_template("index.html")
+    return render_template("viewproject.html", currentProject = Project.getOne(data), itemList = Project.projectItems(data))
 
 
 @app.route('/newproject')
@@ -39,7 +38,6 @@ def newproject():
         flash('Please log in')
         return redirect('/')
 
-
     return render_template("newproject.html")
 
 @app.route('/createproject', methods = ['POST'])
@@ -47,18 +45,15 @@ def upload_file():
     if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
-    else:
-        data = {
-            'userId': session['userId'], 
-            'projectName' : request.form['name'],
-            'description' : request.form['description']
-        }
-
+    
+    data = {
+        'userId': session['userId'], 
+        'projectName' : request.form['name'],
+        'description' : request.form['description']
+    }
     f = request.files['file']
 
     pID = Project.addProject(f, data)
-
-    print("finished adding project/items")
 
     return redirect (f"/viewproject/{pID}/")
 
@@ -74,12 +69,14 @@ def spacedRepetition():
 
     return render_template("index.html")
 
-@app.route('/deleteproject')
-def deleteProject():
-    pass
+@app.route('/deleteproject/<int:pID>/')
+def deleteProject(pID):
+    data = {
+            'id': pID
+        }
+    Project.deleteProject(data)
 
     return redirect("dashboard.html")
-
 
 
 @app.route('/user/<int:userId>/')
@@ -87,9 +84,9 @@ def viewUserProjects(userId):
     if 'user_id' not in session:
         flash('Please log in')
         return redirect('/')
-    else:
-        data = {
+    
+    data = {
             'id': userId
-        }
-        myprojects = User.userProjects(data)
-        return render_template('viewUserProjects.html', projectList = myprojects)
+    }
+    myprojects = User.userProjects(data)
+    return render_template('viewUserProjects.html', projectList = myprojects)
