@@ -78,11 +78,6 @@ def projectAnalytics():
 
     return render_template("index.html")
 
-@app.route('/spacedrepetition')
-def spacedRepetition():
-    pass
-
-    return render_template("index.html")
 
 @app.route('/deleteproject/<int:pID>/')
 def deleteProject(pID):
@@ -105,3 +100,40 @@ def viewUserProjects(userId):
     }
     myprojects = User.userProjects(data)
     return render_template('viewUserProjects.html', projectList = myprojects)
+
+@app.route('/spacedrepetition/<int:pID>')
+def spacedRepetition(pID):
+    if 'user_id' not in session:
+        flash('Please log in')
+        return redirect('/')
+    
+    data = {
+            'id': pID,
+            'pID' : pID
+    }
+
+    return render_template('spacedrepetition.html', currentProject = Project.getOne(data), itemList = Project.projectItems(data), availableItems = 3 - Item.getOpenItemCount(data) )
+
+@app.route('/generateitems', methods = ['POST'])
+def generateItems():
+
+    data = {
+        "pID" : request.form['pID'],
+        "itemCount" : request.form['itemCount']
+    }
+
+    openItems = Item.getOpenItemCount(data)
+
+    if request.form['itemCount'] == "0":
+        flash("Please select an item count")
+        return redirect (f"spacedrepetition/{data['pID']}")
+
+    elif openItems + int(data['itemCount']) > 3:
+        flash("You can only have 3 items in progress at a time.")
+        return redirect (f"spacedrepetition/{data['pID']}")
+
+    generatedItems = Project.generateItems(data)
+
+    flash(f"Generated {len(generatedItems.items)} item(s)!")
+
+    return redirect (f"/viewproject/{request.form['pID']}/")

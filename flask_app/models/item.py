@@ -29,6 +29,14 @@ class Item:
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
+
+    @classmethod
+    def bookAttempt(cls, data ):
+
+        query = "INSERT INTO attempt_history (attemptDate, projectName, itemName, category, confidenceLevel, difficultyLevel, status, attempts, items_id) SELECT NOW(), projects.projectName, itemName, category, confidenceLEvel, difficultyLevel, status, attempts, items.id from items join projects on projects.id = items.projectId where items.id = %(id)s;"
+        
+        # data is a dictionary that will be passed into the save method from server.py
+        return connectToMySQL(cls.db).query_db( query, data )
     
     @classmethod
     def getOne(cls,data):
@@ -143,7 +151,7 @@ class Item:
     def reviewItem(cls, data):
 
         query = "UPDATE items SET status = 'Completed', attempts = attempts + 1, confidenceLevel = %(confidenceLevel)s WHERE id = %(id)s"
-
+        
         return connectToMySQL(cls.db).query_db( query, data ) 
 
     @classmethod

@@ -88,7 +88,7 @@ class Project:
 
     @classmethod
     def projectItems(cls,data):
-        query = "select * from projects left join items on projects.id = items.projectId WHERE projects.id = %(id)s"
+        query = "select * from projects left join items on projects.id = items.projectId WHERE projects.id = %(id)s order by status desc"
         result = connectToMySQL(cls.db).query_db(query, data)
         project = cls(result[0])
         for row in result:
@@ -129,6 +129,42 @@ class Project:
             allprojects.append(r)
 
         return allprojects
+    
+    @classmethod
+    def generateItems(cls, data):
 
+        query = "with a as (select category, avg(confidenceLevel) as categoryConfidence FROM items where projectId = 1 group by 1) select * from projects join items on projects.id = items.projectId and projects.id = 1 and status <> 'In Progress' left join a on a.category = items.category order by (confidenceLevel+a.categoryConfidence+difficultyLevel+attempts) asc"
+        result = connectToMySQL(Project.db).query_db(query)
+
+
+        project = cls(result[0])
+
+        print(data['itemCount'])
+
+        counter = 0 
+        limit = int(data['itemCount'])
+
+        for row in result:
+            if counter < limit:
+                data = {
+                    "id" : row['items.id'],
+                    "itemName" : row['itemName'],
+                    "category" : row['category'],
+                    "confidenceLevel" : row['confidenceLevel'],
+                    "difficultyLevel" : row['difficultyLevel'],
+                    "status" : row['status'],
+                    "attempts" : row['attempts'],
+                    "createdDate" : row['createdDate'],
+                    "updatedDate" : row['updatedDate'],
+                    "projectId" : row['projectId'] 
+                }
+                temp = item.Item(data)
+                project.items.append(temp)
+
+                item.Item.attemptItem(data) 
+
+                counter += 1
+
+        return project
 
 

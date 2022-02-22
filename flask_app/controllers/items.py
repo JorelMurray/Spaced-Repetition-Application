@@ -113,10 +113,11 @@ def submitReview():
 
     data = {
         "id" : request.form['itemID'],
-        "confidenceLevel" : request.form['confidenceLevel']
+        "confidenceLevel" : request.form['confidenceLevel'],
     }
     print(request.form['confidenceLevel'])
     Item.reviewItem(data)
+    Item.bookAttempt(data)
 
     return redirect (f"/viewproject/{request.form['pID']}/")
 
@@ -133,7 +134,8 @@ def attemptItem(pID,itemID):
         flash("You can only have 3 items in progress at a time.")
         return redirect(f"/viewproject/{pID}/") 
 
-    Item.attemptItem(data)    
+    Item.attemptItem(data) 
+    Item.bookAttempt(data)   
     
     return redirect(f"/viewproject/{pID}/")
 
