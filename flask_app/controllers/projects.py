@@ -6,6 +6,21 @@ from flask_app.models.item import Item
 from flask_bcrypt import Bcrypt
 bcrypt = Bcrypt(app)
 
+confidenceRef = {
+    0 : "New",
+    1 : "Very Low",
+    2 : "Low",
+    3 : "Medium",
+    4 : "High",
+    5 : "Very High"
+}
+difficultyRef = {
+    1 : "Very Easy",
+    2 : "Easy",
+    3 : "Medium",
+    4 : "Hard",
+    5 : "Very Hard"
+}
 
 @app.route('/dashboard') 
 def dashboard():
@@ -29,7 +44,7 @@ def viewproject(pID):
             'id': pID
         }
 
-    return render_template("viewproject.html", currentProject = Project.getOne(data), itemList = Project.projectItems(data))
+    return render_template("viewproject.html", currentProject = Project.getOne(data), itemList = Project.projectItems(data), confidenceRef = confidenceRef, difficultyRef = difficultyRef)
 
 
 @app.route('/newproject')
@@ -76,7 +91,7 @@ def deleteProject(pID):
         }
     Project.deleteProject(data)
 
-    return redirect("dashboard.html")
+    return redirect("/dashboard")
 
 
 @app.route('/user/<int:userId>/')

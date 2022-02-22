@@ -13,7 +13,8 @@ class Item:
         self.id = data['id']
         self.itemName = data['itemName']
         self.category = data['category']
-        self.masteryLevel = data['masteryLevel']
+        self.confidenceLevel = data['confidenceLevel']
+        self.difficultyLevel = data['difficultyLevel']
         self.status = data['status']
         self.attempts = data['attempts']
         self.createdDate = data['createdDate']
@@ -24,7 +25,7 @@ class Item:
     @classmethod
     def addItem(cls, data ):
 
-        query = "INSERT INTO items ( itemName , category , masteryLevel , status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'New', 0, NOW() , NOW(), %(pID)s);"
+        query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel , status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s, 'New', 0, NOW() , NOW(), %(pID)s);"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
@@ -47,10 +48,11 @@ class Item:
                 item = {
                     'itemName' : df['itemName'][ind],
                     'category' : df['category'][ind],
+                    'difficultyLevel' : df['difficultyLevel'][ind],
                     'projectId': pID
                 }
                 print(item)
-                query = "INSERT INTO items ( itemName , category , masteryLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 'New', 'New', 0, NOW() , NOW(), %(projectId)s);"
+                query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s ,'New', 0, NOW() , NOW(), %(projectId)s);"
                 connectToMySQL(cls.db).query_db( query, item )
             
         return pID
@@ -102,29 +104,15 @@ class Item:
         return is_valid
 
     @classmethod
-    def userRecipes(cls,data):
-        query = "select * from users left join recipes on users.id = recipes.User_id WHERE users.id = %(id)s"
-        result = connectToMySQL(cls.db).query_db(query, data)
-        user = cls(result[0])
-        for row in result:
-            data = {
-                "id" : row['recipes.id'],
-                "name" : row['name'],
-                "description" : row['description'],
-                "instructions" : row['instructions'],
-                "date_made_on" : row['date_made_on'],
-                "under_30_min" : row['under_30_min'],
-                "created_at" : row['created_at'],
-                "updated_at" : row['updated_at'],
-                "user_id" : row['User_id']
-            }
-            temp = recipe.Recipe(data)
-            user.recipes.append(temp)
-        return user
+    def deleteItem(cls, data ):
+        query = "DELETE FROM items where id = %(id)s;"
+        
+        # data is a dictionary that will be passed into the save method from server.py
+        return connectToMySQL(cls.db).query_db( query, data )
 
     @classmethod
-    def deleteItem(cls, data ):
-        query = "DELETE FROM users where id = %(id)s;"
+    def deleteProjectItems(cls, data ):
+        query = "DELETE FROM items where projectId = %(id)s;"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
@@ -132,7 +120,29 @@ class Item:
     @classmethod
     def updateItem(cls, data):
 
-        query = "UPDATE items SET itemName = %(itemName)s, category = %(category)s WHERE id = %(id)s"
+        query = "UPDATE items SET itemName = %(itemName)s, category = %(category)s, difficultyLevel = %(difficultyLevel)s WHERE id = %(id)s"
+
+        return connectToMySQL(cls.db).query_db( query, data ) 
+
+    @classmethod
+    def attemptItem(cls, data):
+
+        query = "UPDATE items SET status = 'In Progress' WHERE id = %(id)s"
+
+        return connectToMySQL(cls.db).query_db( query, data ) 
+
+    @classmethod
+    def getOpenItemCount(cls, data):
+        query = "SELECT COUNT(id) FROM items WHERE projectID = %(pID)s AND status = 'In Progress';"
+
+        result = connectToMySQL(cls.db).query_db( query, data )
+
+        return result[0]['COUNT(id)']
+
+    @classmethod
+    def reviewItem(cls, data):
+
+        query = "UPDATE items SET status = 'Completed', attempts = attempts + 1, confidenceLevel = %(confidenceLevel)s WHERE id = %(id)s"
 
         return connectToMySQL(cls.db).query_db( query, data ) 
 

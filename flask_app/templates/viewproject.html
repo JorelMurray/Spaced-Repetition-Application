@@ -20,13 +20,13 @@
         </nav>
     </header>
     <main>
-        <!--- {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
-            <!--- {% if messages %}                            <!-- check if there are any messages -->
-                <!--- {% for message in messages %}            <!-- loop through the messages -->
-                    <!--- <p>{{message}}</p>                  <!-- display each message in a paragraph tag -->
-                <!--- {% endfor %}
+        {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
+            {% if messages %}                            <!-- check if there are any messages -->
+                {% for message in messages %}            <!-- loop through the messages -->
+                    <p>{{message}}</p>                  <!-- display each message in a paragraph tag -->
+                {% endfor %}
             {% endif %} 
-        {% endwith %} -->
+        {% endwith %} 
     
         <div class = "formbox">
         <h1>{{currentProject.projectName}}</h1> 
@@ -39,27 +39,33 @@
 
             <input onclick="return confirm('Initiate Upload?')" type="submit" value="Import">
         </form>
-        <input onclick="return confirm('Are you sure you want to delete the project?')" type="button" value = "Delete Project">
+        <button onclick="return confirm('Are you sure you want to delete the project?')" ><a href="/deleteproject/{{currentProject.id}}">Delete Project</a></button>
         <table>
             <tr>
                 <td>Item Name</td>
                 <td>Category</td>
+                <td>Difficulty</td>
+                <td>Confidence</td>
                 <td>Edit</td>
                 <td>Delete</td>
                 <td>Status</td>
                 <td>Attempt/Review</td>
-            </tr>
-            {%for item in itemList.items%}
-                <tr>
-                    <td>{{item['itemName']}}</td>
-                    <td>{{item['category']}}</td>
-                    <td><a href="/edititem/{{currentProject.id}}/{{item['id']}}">Edit</a></td>
-                    <td><a href="/deleteitem/{{currentProject.id}}/{{item['id']}}">Delete</a></td>
-                    <td>{{item['status']}}</td>
-                    <td>{%if item['status'] != "New"%}<a href="/reviewitem/{{item['id']}}">Review</a>{%else%}<a href="/attemptitem/{{item['id']}}">Attempt</a>{%endif%}</td>
+            </tr> 
+            {% if itemList.items[0]['id'] != None %}
+                {%for item in itemList.items%}
+                    <tr>
+                        <td>{{item['itemName']}}</td>
+                        <td>{{item['category']}}</td>
+                        <td>{{difficultyRef[item['difficultyLevel']]}}</td>
+                        <td>{{confidenceRef[item['confidenceLevel']]}}</td>
+                        <td><a href="/edititem/{{currentProject.id}}/{{item['id']}}">Edit</a></td>
+                        <td><a href="/deleteitem/{{currentProject.id}}/{{item['id']}}">Delete</a></td>
+                        <td>{{item['status']}}</td>
+                        <td>{%if item['status'] == "In Progress"%}<a href="/reviewitem/{{currentProject.id}}/{{item['id']}}">Review</a>{%else%}<a href="/attemptitem/{{currentProject.id}}/{{item['id']}}">Attempt</a>{%endif%}</td>
 
-                </tr>
-            {%endfor%}
+                    </tr>
+                {%endfor%}
+            {%endif%}
         </table>
         </div>
     </main>

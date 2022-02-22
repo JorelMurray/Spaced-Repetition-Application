@@ -96,7 +96,8 @@ class Project:
                 "id" : row['items.id'],
                 "itemName" : row['itemName'],
                 "category" : row['category'],
-                "masteryLevel" : row['masteryLevel'],
+                "confidenceLevel" : row['confidenceLevel'],
+                "difficultyLevel" : row['difficultyLevel'],
                 "status" : row['status'],
                 "attempts" : row['attempts'],
                 "createdDate" : row['createdDate'],
@@ -110,6 +111,9 @@ class Project:
     @classmethod
     def deleteProject(cls, data ):
         query = "DELETE FROM projects where id = %(id)s;"
+
+        item.Item.deleteProjectItems(data)
+
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )

@@ -35,14 +35,15 @@
                 <td>Description</td>
                 <td>View Project</td>
             </tr>
-
-            {%for project in projectList.projects%}
-                <tr>
-                    <td>{{project['projectName']}}</td>
-                    <td>{{project['description']}}</td>
-                    <td><a href="/viewproject/{{project['id']}}">View</a></td>
-                </tr>
-            {%endfor%}
+            {% if projectList.projects[0]['id'] != None %}
+                {%for project in projectList.projects%}
+                    <tr>
+                        <td>{{project['projectName']}}</td>
+                        <td>{{project['description']}}</td>
+                        <td><a href="/viewproject/{{project['id']}}">View</a></td>
+                    </tr>
+                {%endfor%}
+            {%endif%}
         </table>
         </div>
     </main>
