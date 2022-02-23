@@ -28,7 +28,7 @@
         <div>
 
         <form action="/createitem" method="POST">
-            <h1>Add Item</h1>
+            <h1 class = "header">Add Item</h1>
 
             <label for="itemName">Item Name:</label>
             <input type="text" name="itemName" >
@@ -40,8 +40,9 @@
             <input type="text" name="difficultyLevel" >
 
             <input type="hidden" name = "pID" value = "{{pID}}">
-
-            <input type="submit" value="Add">
+            <div class = "centerAlign">
+                <input type="submit" value="Add">
+            </div>
         </form>
         </div>
 

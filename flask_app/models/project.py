@@ -42,48 +42,17 @@ class Project:
         return cls(result[0])
 
     @staticmethod
-    def validate(project, formType):
+    def validate(form):
         is_valid = True # we assume this is true
 
-        if formType == "Login":
+        if len(form['projectName']) < 1:
+            is_valid = False
+            flash('The password must enter an Project Name')
+        if len(form['description']) < 1:
+            is_valid = False
+            flash('The password must enter a Description')
 
-            query = 'SELECT * FROM USERS WHERE email = %(loginEmail)s;'
-            result = connectToMySQL(Project.db).query_db(query, project)
-            print(len(result))
-            if not EMAIL_REGEX.match(project['loginEmail']):
-                flash("Must enter a valid loginemail address")
-                is_valid = False
-
-
-            elif len(result) < 1:
-                is_valid = False
-                flash("The email entered is not currently registered.")
-                
-
-
-        elif formType == 'Registration':
         
-            query = 'SELECT * FROM USERS WHERE email = %(email)s;'
-            result = connectToMySQL(Project.db).query_db(query, project)
-
-            if not EMAIL_REGEX.match(project['email']):
-                flash("Must enter a valid email address")
-                is_valid = False
-                print(project['email'])
-
-            if len(result) >= 1:
-                is_valid = False
-                flash("That email is already registered to a user.")
-
-            if len(project['password']) < 3:
-                is_valid = False
-                flash('The password must be greater than 3 characters')
-
-            if project['password'] != project['confirm']:
-                is_valid = False
-                flash('Your passwords entered must match.')
-
-
         return is_valid
 
     @classmethod

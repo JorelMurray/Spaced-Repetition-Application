@@ -91,7 +91,7 @@ def deleteProject(pID):
 
 @app.route('/user/<int:userId>/')
 def viewUserProjects(userId):
-    if 'user_id' not in session:
+    if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
     
@@ -103,7 +103,7 @@ def viewUserProjects(userId):
 
 @app.route('/spacedrepetition/<int:pID>')
 def spacedRepetition(pID):
-    if 'user_id' not in session:
+    if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
     

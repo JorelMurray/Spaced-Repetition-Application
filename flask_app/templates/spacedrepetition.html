@@ -24,11 +24,13 @@
                 {% endfor %}
             {% endif %} 
         {% endwith %}
-
+    <div>
         <div>
             <h1>Spaced Repetition Generator</h1>
-
+        
         <form action="/generateitems" method="POST">
+
+            
             <p>You may attempt {{availableItems}} more item(s)</p>
 
             <label for="itemCount">Number of Items:</label>
@@ -37,11 +39,12 @@
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
-            </select>
+            </select> 
             
             <input type="hidden" name = "pID" value = "{{currentProject.id}}">
-
-            <input type="submit" value="Generate Items">
+            <div class = "centerAlign">
+                <input type="submit" value="Generate Items">
+            </div>
         </form>
         </div>
 

@@ -21,7 +21,25 @@ class Item:
         self.updatedDate = data['updatedDate']
         self.projectId = data['projectId']
 
-    
+
+    @staticmethod
+    def validate(form):
+
+        is_valid = True # we assume this is true
+
+        if len(form['itemName']) < 1:
+            is_valid = False
+            flash('The password must enter an Item Name')
+        if len(form['category']) < 1:
+            is_valid = False
+            flash('The password must enter a Category')
+        if len(form['difficulty']) < 1:
+            is_valid = False
+            flash('The password must enter a Difficulty')
+
+        
+        return is_valid
+
     @classmethod
     def addItem(cls, data ):
 

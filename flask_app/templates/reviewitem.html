@@ -34,7 +34,7 @@
                 Confidence Level : {{confidenceRef[currentItem.confidenceLevel]}}
             </p>
 
-        <form action="/submitreview" method="POST">
+        <form action="/submitreview" method="POST" class = "formbox">
             <h1>Review Item</h1>
 
             <label for="confidenceLevel">Confidence Level:</label>
@@ -49,9 +49,9 @@
 
             <input type="hidden" name = "pID" value = "{{pID}}">
             <input type="hidden" name = "itemID" value = "{{currentItem.id}}">
-
-
-            <input type="submit" value="Submit">
+            <div class = "centerAlign">
+                <input type="submit" value="Submit">
+            </div>
         </form>
         </div>
 

@@ -15,7 +15,6 @@ main {
     margin-right: 20px;
     border: 2px solid black;
     text-align: center;
-    width: 250px;
     padding: 5px;
 }
 .login {
@@ -46,4 +45,16 @@ nav {
     display: flex;
     align-items: right;
     justify-content: center;
+}
+.centerAlign {
+    display: flex;
+    justify-content: center;
+    margin: 5px;
+
+}
+.header {
+    text-align: center;
+}
+table {
+    margin-top: 10px;
 }

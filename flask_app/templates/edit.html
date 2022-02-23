@@ -10,22 +10,20 @@
 <body>
     <header>
         <nav>
-            {% block menu %} {% include 'menu.html' %} {% endblock menu %}
+            <div class = 'options'>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/logout">Logout</a>
+            </div>        
         </nav>
     </header>
     <main>
         <div class = "headline">
             <h1>Welcome {{session.first_name}}!</h1>   
-        
-            <div class = 'options'>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/logout">Logout</a>
-            </div>        
         </div>
 
         <h1>Edit Recipe</h1>
 
-        <form action="/recipes/update" method="POST">
+        <form action="/recipes/update" method="POST" class = "formbox">
 
             <label for="name">Name:</label>
             <input type="text" name="name" value = "{{recipe.name}}">
@@ -46,8 +44,9 @@
             <input type="radio" name="under_30_min">
 
             <input type="hidden" name = "recipe_id" value = "{{recipe.id}}">
-
-            <input type="submit" value="Update">
+            <div class = "centerAlign">
+                <input type="submit" value="Update">
+            </div>    
         </form>
 
     </div>

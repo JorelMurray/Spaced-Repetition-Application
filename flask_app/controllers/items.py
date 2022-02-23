@@ -26,7 +26,8 @@ difficultyRef = {
 def addItem(pID):
     if 'userId' not in session:
         flash('Please log in')
-        return redirect('/')    
+        return redirect('/')     
+    
 
     return render_template("newitem.html", pID = pID)
 
@@ -35,6 +36,11 @@ def createItem():
     if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
+
+    isValid = Item.validate(request.form)
+
+    if not isValid:
+        return redirect(f"/additem/{request.form['pID']}/")
 
     data = {
         "itemName" : request.form['itemName'],
@@ -60,7 +66,6 @@ def importItems():
     if f.filename != '':
         pID = Item.importItems(request.form['pID'], f)
 
-    print("proeceed")
 
     return redirect (f"/viewproject/{pID}/")
     
@@ -81,6 +86,11 @@ def updateItem():
     if 'userId' not in session:
         flash('Please log in')
         return redirect('/')
+    
+    isValid = Item.validate(request.form)
+
+    if not isValid:
+        return redirect(f"/additem/{request.form['pID']}/{request.form['itemID']}")
 
     data = {
         "id" : request.form['itemID'],
