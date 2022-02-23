@@ -40,7 +40,7 @@ def createItem():
     isValid = Item.validate(request.form)
 
     if not isValid:
-        return redirect(f"/additem/{request.form['pID']}/")
+        return redirect(f"/additem/{request.form['pID']}")
 
     data = {
         "itemName" : request.form['itemName'],
@@ -90,7 +90,7 @@ def updateItem():
     isValid = Item.validate(request.form)
 
     if not isValid:
-        return redirect(f"/additem/{request.form['pID']}/{request.form['itemID']}")
+        return redirect(f"/edititem/{request.form['pID']}/{request.form['itemID']}")
 
     data = {
         "id" : request.form['itemID'],

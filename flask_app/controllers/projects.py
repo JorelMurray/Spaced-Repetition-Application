@@ -61,9 +61,14 @@ def upload_file():
         flash('Please log in')
         return redirect('/')
     
+    isValid = Project.validate(request.form)
+
+    if not isValid:
+        return redirect("/newproject")
+    
     data = {
         'userId': session['userId'], 
-        'projectName' : request.form['name'],
+        'projectName' : request.form['projectName'],
         'description' : request.form['description']
     }
     f = request.files['file']

@@ -36,8 +36,29 @@
             <label for="category">Category:</label>
             <input type="text" name="category" value = "{{currentItem.category}}">
 
-            <label for="difficultyLevel">Difficulty:</label>
-            <input type="text" name="difficultyLevel" value = "{{currentItem.difficultyLevel}}">
+
+            <label for="difficultyLevel">Difficulty Level:</label>
+            <select id="difficultyLevel" name="difficultyLevel">
+
+                {% if currentItem.difficultyLevel == 0%} <option value="1" selected>Select an option</option> 
+                {%else%}<option value="0">Select an Option</option>{%endif%}
+
+                {% if currentItem.difficultyLevel == 1%} <option value="1" selected>Very Easy</option> 
+                {%else%}<option value="1">Very Easy</option>{%endif%}
+
+                {% if currentItem.difficultyLevel == 2%} <option value="1" selected>Easy</option> 
+                {%else%}<option value="2">Easy</option>{%endif%}
+
+                {% if currentItem.difficultyLevel == 3%} <option value="1" selected>Medium</option> 
+                {%else%}<option value="3">Medium</option>{%endif%}
+
+                {% if currentItem.difficultyLevel == 4%} <option value="1" selected>Hard</option> 
+                {%else%}<option value="4">Hard</option>{%endif%}
+
+                {% if currentItem.difficultyLevel == 5%} <option value="1" selected>Very Hard</option> 
+                {%else%}<option value="5">Very Hard</option>{%endif%}
+
+            </select>
 
             <input type="hidden" name = "pID" value = "{{pID}}">
             <input type="hidden" name = "itemID" value = "{{currentItem.id}}">

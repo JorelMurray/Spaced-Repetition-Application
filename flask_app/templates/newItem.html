@@ -28,16 +28,23 @@
         <div>
 
         <form action="/createitem" method="POST">
-            <h1 class = "header">Add Item</h1>
+            <h1 class = "header">Add Item</h1> 
 
             <label for="itemName">Item Name:</label>
             <input type="text" name="itemName" >
 
             <label for="category">Category:</label>
             <input type="text" name="category" >
-            
-            <label for="difficultyLevel">Difficulty:</label>
-            <input type="text" name="difficultyLevel" >
+
+            <label for="difficultyLevel">Difficulty Level:</label>
+            <select id="difficultyLevel" name="difficultyLevel">
+                <option value="0" selected>Select an Option</option>
+                <option value="1">Very Easy</option>
+                <option value="2">Easy</option>
+                <option value="3">Medium</option>
+                <option value="4">Hard</option>
+                <option value="5">Very Hard</option>
+            </select>
 
             <input type="hidden" name = "pID" value = "{{pID}}">
             <div class = "centerAlign">

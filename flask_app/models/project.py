@@ -47,11 +47,10 @@ class Project:
 
         if len(form['projectName']) < 1:
             is_valid = False
-            flash('The password must enter an Project Name')
+            flash('You must enter a Project Name. ')
         if len(form['description']) < 1:
             is_valid = False
-            flash('The password must enter a Description')
-
+            flash('You must enter a Description. ')
         
         return is_valid
 

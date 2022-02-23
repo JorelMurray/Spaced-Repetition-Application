@@ -26,16 +26,19 @@ class Item:
     def validate(form):
 
         is_valid = True # we assume this is true
+        print(form['itemName'])
+        print(form['category'])
+        print(form['difficultyLevel'])
 
         if len(form['itemName']) < 1:
             is_valid = False
-            flash('The password must enter an Item Name')
+            flash('You must enter an Item Name. ')
         if len(form['category']) < 1:
             is_valid = False
-            flash('The password must enter a Category')
-        if len(form['difficulty']) < 1:
+            flash('You must enter a Category. ')
+        if form['difficultyLevel'] == "0":
             is_valid = False
-            flash('The password must enter a Difficulty')
+            flash('You must enter a Difficulty. ')
 
         
         return is_valid
@@ -82,52 +85,6 @@ class Item:
                 connectToMySQL(cls.db).query_db( query, item )
             
         return pID
-
-
-    @staticmethod
-    def validate(item, formType):
-        is_valid = True # we assume this is true
-
-        if formType == "Login":
-
-            query = 'SELECT * FROM USERS WHERE email = %(loginEmail)s;'
-            result = connectToMySQL(User.db).query_db(query, user)
-            print(len(result))
-            if not EMAIL_REGEX.match(user['loginEmail']):
-                flash("Must enter a valid loginemail address")
-                is_valid = False
-
-
-            elif len(result) < 1:
-                is_valid = False
-                flash("The email entered is not currently registered.")
-                
-
-
-        elif formType == 'Registration':
-        
-            query = 'SELECT * FROM USERS WHERE email = %(email)s;'
-            result = connectToMySQL(User.db).query_db(query, user)
-
-            if not EMAIL_REGEX.match(user['email']):
-                flash("Must enter a valid email address")
-                is_valid = False
-                print(user['email'])
-
-            if len(result) >= 1:
-                is_valid = False
-                flash("That email is already registered to a user.")
-
-            if len(user['password']) < 3:
-                is_valid = False
-                flash('The password must be greater than 3 characters')
-
-            if user['password'] != user['confirm']:
-                is_valid = False
-                flash('Your passwords entered must match.')
-
-
-        return is_valid
 
     @classmethod
     def deleteItem(cls, data ):
