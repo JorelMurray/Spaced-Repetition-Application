@@ -36,9 +36,15 @@
             <label for="itemCount">Number of Items:</label>
             <select id="itemCount" name="itemCount">
                 <option value="0" selected>Select an Option</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                {%if availableItems >= 1 %}
+                    <option value="1">1</option>
+                {%endif%}
+                {%if availableItems >= 2 %}
+                    <option value="2">2</option>
+                {%endif%}
+                {%if availableItems >= 3 %}
+                    <option value="3">3</option>
+                {%endif%}
             </select> 
             
             <input type="hidden" name = "pID" value = "{{currentProject.id}}">

@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!--<link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"> -->
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css" integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
     <title>Document</title>
 </head>
 <body>
+<div class="container">
     <header>
         <nav class = "loginNav">
     {% with messages = get_flashed_messages() %}     <!-- declare a variable called messages -->
@@ -22,41 +25,50 @@
     </header>
     <main>
 
+    <div class="row my-custom-row justify-content-center align-items-center row-no-gutters" ">
+        <div class = "col-sm-6 text-center" style = "border: solid 2px black; width: 30%; background: lightgrey" >
+            <h1><u><em>Register User</em></u></h1>
 
-    <div class = "login">
-        <h1>Register User</h1>
+            <form action="/register" method="POST">
 
-    <form action="/register" method="POST">
+                <div clsas = "p-3">
+                    <label for="fname">First Name:</label>
+                    <input type="text" name="fname">
+                </div><div>
+                    <label for="lname" >Last Name:</label>
+                    <input type="text" name="lname">
+                </div><div>
+                    <label for="email" >Email:</label>
+                    <input type="text" name="email">
+                </div><div>
+                    <label for="password" >Password:</label>
+                    <input type="text" name="password">
+                </div><div>
+                    <label for="confirm" >Confirm Password:</label>
+                    <input type="text" name="confirm">
+                </div>
 
-        <label for="fname">First Name:</label>
-        <input type="text" name="fname">
-        <label for="lname" >Last Name:</label>
-        <input type="text" name="lname">
-        <label for="email" >Email:</label>
-        <input type="text" name="email">
-        <label for="password" >Password:</label>
-        <input type="text" name="password">
-        <label for="confirm" >Confirm Password:</label>
-        <input type="text" name="confirm">
+                <input type="submit" value="Register">
+            </form>
+        </div>    
+        <div class = "col-sm-6 text-center" style = "border: solid 2px black; width: 30%; height: 240px; background: lightgrey">
+            <h1><u><em>Log In</em></u></h1>
 
+            <form action="/login" method="POST">
+            <div>
+                <label for="loginEmail">Email:</label>
+                <input type="text" name="loginEmail">
+                </div><div>
+                <label for="loginPassword" >Password:</label>
+                <input type="text" name="loginPassword">
+                </div><div>
+                <input type="submit" value="Login">
+                </div>
+            </form>
 
-        <input type="submit" value="Register">
-    </form>
-    </div>    
-        <div class = "login">
-        <h1>Log In</h1>
-
-        <form action="/login" method="POST">
-
-            <label for="loginEmail">Email:</label>
-            <input type="text" name="loginEmail">
-            <label for="loginPassword" >Password:</label>
-            <input type="text" name="loginPassword">
-            <input type="submit" value="Login">
-        </form>
-
+        </div>
     </div>
-
+</div>
     </main>
     <footer>
 

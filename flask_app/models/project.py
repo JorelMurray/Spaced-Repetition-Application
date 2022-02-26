@@ -101,8 +101,9 @@ class Project:
     @classmethod
     def generateItems(cls, data):
 
-        query = "with a as (select category, avg(confidenceLevel) as categoryConfidence FROM items where projectId = 1 group by 1) select * from projects join items on projects.id = items.projectId and projects.id = 1 and status <> 'In Progress' left join a on a.category = items.category order by (confidenceLevel+a.categoryConfidence+difficultyLevel+attempts) asc"
-        result = connectToMySQL(Project.db).query_db(query)
+        print(data['pID'])
+        query = "with a as (select category, avg(confidenceLevel) as categoryConfidence FROM items where projectId = %(pID)s group by 1) select * from projects join items on projects.id = items.projectId and projects.id = %(pID)s and status <> 'In Progress' left join a on a.category = items.category order by (confidenceLevel+a.categoryConfidence+difficultyLevel+attempts) asc"
+        result = connectToMySQL(Project.db).query_db(query, data)
 
 
         project = cls(result[0])

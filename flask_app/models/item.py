@@ -80,7 +80,7 @@ class Item:
                     'difficultyLevel' : df['difficultyLevel'][ind],
                     'projectId': pID
                 }
-                print(item)
+                
                 query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s ,'New', 0, NOW() , NOW(), %(projectId)s);"
                 connectToMySQL(cls.db).query_db( query, item )
             
