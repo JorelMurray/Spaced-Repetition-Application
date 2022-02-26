@@ -3,7 +3,10 @@ from flask import Flask, render_template, request, redirect, session, flash
 from flask_app.models.user import User
 from flask_app.models.project import Project
 from flask_app.models.item import Item
+from openpyxl import Workbook
+import getpass
 from flask_bcrypt import Bcrypt
+import webbrowser
 bcrypt = Bcrypt(app)
 
 confidenceRef = {
@@ -79,6 +82,7 @@ def editItem(pID, itemID):
     data = {
         "id" : itemID
     }
+    
 
     return render_template("edititem.html", currentItem = Item.getOne(data), pID = pID)
 
@@ -97,7 +101,8 @@ def updateItem():
         "id" : request.form['itemID'],
         "itemName" : request.form['itemName'],
         "category" : request.form['category'],
-        "difficultyLevel" : request.form['difficultyLevel']
+        "difficultyLevel" : request.form['difficultyLevel'],
+        "itemURL" : request.form['itemURL']
     }
 
     Item.updateItem(data)
@@ -126,7 +131,6 @@ def submitReview():
         "id" : request.form['itemID'],
         "confidenceLevel" : request.form['confidenceLevel'],
     }
-    print(request.form['confidenceLevel'])
     Item.reviewItem(data)
     Item.bookAttempt(data)
 
@@ -146,13 +150,17 @@ def attemptItem(pID,itemID):
         return redirect(f"/viewproject/{pID}/") 
 
     Item.attemptItem(data) 
-    Item.bookAttempt(data)   
+    Item.bookAttempt(data) 
+
+    currentItem = Item.getOne(data)
+
+    if currentItem.itemURL != "":
+        webbrowser.open_new_tab(f'{currentItem.itemURL}')
     
     return redirect(f"/viewproject/{pID}/")
 
 @app.route('/deleteitem/<int:pID>/<int:itemID>')
 def deleteItem(pID, itemID):
-    print("made it to delete")
     data = {
         'id': itemID,
     }
@@ -160,3 +168,19 @@ def deleteItem(pID, itemID):
 
     return redirect(f"/viewproject/{pID}/")
 
+@app.route('/loadtemplate/<int:pID>')
+def generateLoadTemplat(pID):
+    wb = Workbook()
+
+    ws = wb.active
+
+    ws.title = "Item Load Template"
+
+    ws['A1'] = "Item"
+    ws['B1'] = "Category"
+    ws['C1'] = "Difficulty"
+    ws['D1'] = "URL"
+
+    wb.save(f'C:/Users/{getpass.getuser()}/Downloads/LoadTemplate.xlsx')
+    
+    return redirect(f"/viewproject/{pID}/")

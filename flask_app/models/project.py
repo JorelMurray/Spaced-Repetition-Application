@@ -4,6 +4,7 @@ from flask import flash
 from flask_app.models import item
 import re
 import pandas as pd
+import webbrowser
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 #This is a git test
 class Project:
@@ -75,6 +76,7 @@ class Project:
             }
             temp = item.Item(data)
             project.items.append(temp)
+
         return project
 
     @classmethod
@@ -133,6 +135,10 @@ class Project:
                 project.items.append(temp)
 
                 item.Item.attemptItem(data) 
+                item.Item.bookAttempt(data)
+
+                if data['itemURL'] != "":
+                    webbrowser.open_new_tab(f"{data['itemURL']}")
 
                 counter += 1
 

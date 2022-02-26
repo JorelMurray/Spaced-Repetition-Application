@@ -29,9 +29,6 @@ class Item:
     def validate(form):
 
         is_valid = True # we assume this is true
-        print(form['itemName'])
-        print(form['category'])
-        print(form['difficultyLevel'])
 
         if len(form['itemName']) < 1:
             is_valid = False
@@ -77,7 +74,6 @@ class Item:
 
         df = pd.read_excel(f)
 
-        print("made it before index loop")
 
         df['URL'] = df['URL'].fillna("")
 
@@ -122,7 +118,7 @@ class Item:
     @classmethod
     def updateItem(cls, data):
 
-        query = "UPDATE items SET itemName = %(itemName)s, category = %(category)s, difficultyLevel = %(difficultyLevel)s WHERE id = %(id)s"
+        query = "UPDATE items SET itemName = %(itemName)s, category = %(category)s, difficultyLevel = %(difficultyLevel)s, itemURL = %(itemURL)s WHERE id = %(id)s"
 
         return connectToMySQL(cls.db).query_db( query, data ) 
 
