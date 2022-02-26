@@ -1,9 +1,11 @@
 # import the function that will return an instance of a connection
+from cmath import nan
 from mysqlconnection import connectToMySQL
 from flask import flash
 from flask_app.models import project
 import re
 import pandas as pd
+import numpy as np
 EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$') 
 
 class Item:
@@ -20,6 +22,7 @@ class Item:
         self.createdDate = data['createdDate']
         self.updatedDate = data['updatedDate']
         self.projectId = data['projectId']
+        self.itemURL = data['itemURL']
 
 
     @staticmethod
@@ -46,7 +49,7 @@ class Item:
     @classmethod
     def addItem(cls, data ):
 
-        query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel , status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s, 'New', 0, NOW() , NOW(), %(pID)s);"
+        query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel , status, attempts, createdDate, updatedDate, projectId, itemURL ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s, 'New', 0, NOW() , NOW(), %(pID)s, %(itemURL)s);"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )
@@ -73,22 +76,38 @@ class Item:
     def importItems(cls, pID, f):
 
         df = pd.read_excel(f)
+
+        print("made it before index loop")
+
+        df['URL'] = df['URL'].fillna("")
+
         for ind in df.index:
-                item = {
-                    'itemName' : df['itemName'][ind],
-                    'category' : df['category'][ind],
-                    'difficultyLevel' : df['difficultyLevel'][ind],
-                    'projectId': pID
-                }
-                
-                query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel, status, attempts, createdDate, updatedDate, projectId ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s ,'New', 0, NOW() , NOW(), %(projectId)s);"
-                connectToMySQL(cls.db).query_db( query, item )
+
+            item = {    
+                'itemName' : df['Item'][ind],
+                'category' : df['Category'][ind],
+                'difficultyLevel' : df['Difficulty'][ind],
+                'itemURL' : df['URL'][ind],
+                'projectId': pID
+            }
+
+            query = "INSERT INTO items ( itemName , category , confidenceLevel, difficultyLevel, status, attempts, createdDate, updatedDate, projectId, itemURL ) VALUES ( %(itemName)s , %(category)s , 0, %(difficultyLevel)s ,'New', 0, NOW() , NOW(), %(projectId)s, %(itemURL)s);"
+            connectToMySQL(cls.db).query_db( query, item )
             
         return pID
 
     @classmethod
     def deleteItem(cls, data ):
         query = "DELETE FROM items where id = %(id)s;"
+
+        Item.deleteItemHistory(data)
+        
+        # data is a dictionary that will be passed into the save method from server.py
+        return connectToMySQL(cls.db).query_db( query, data )
+
+    @classmethod
+    def deleteItemHistory(cls, data ):
+        query = "DELETE FROM attempt_history where items_id = %(id)s;"
         
         # data is a dictionary that will be passed into the save method from server.py
         return connectToMySQL(cls.db).query_db( query, data )

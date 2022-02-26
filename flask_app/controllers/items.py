@@ -46,6 +46,7 @@ def createItem():
         "itemName" : request.form['itemName'],
         "category" : request.form['category'],
         "difficultyLevel" : request.form['difficultyLevel'],
+        "itemURL" : request.form['itemURL'],
         "pID" : request.form['pID']
     }
 
@@ -151,8 +152,9 @@ def attemptItem(pID,itemID):
 
 @app.route('/deleteitem/<int:pID>/<int:itemID>')
 def deleteItem(pID, itemID):
+    print("made it to delete")
     data = {
-        'id': itemID
+        'id': itemID,
     }
     Item.deleteItem(data)
 

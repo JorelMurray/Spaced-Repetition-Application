@@ -70,7 +70,8 @@ class Project:
                 "attempts" : row['attempts'],
                 "createdDate" : row['createdDate'],
                 "updatedDate" : row['updatedDate'],
-                "projectId" : row['projectId'] 
+                "projectId" : row['projectId'], 
+                "itemURL" : row['itemURL']
             }
             temp = item.Item(data)
             project.items.append(temp)
@@ -125,7 +126,8 @@ class Project:
                     "attempts" : row['attempts'],
                     "createdDate" : row['createdDate'],
                     "updatedDate" : row['updatedDate'],
-                    "projectId" : row['projectId'] 
+                    "projectId" : row['projectId'], 
+                    "itemURL" : row['itemURL']
                 }
                 temp = item.Item(data)
                 project.items.append(temp)
