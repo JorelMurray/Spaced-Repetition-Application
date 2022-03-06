@@ -68,7 +68,7 @@ def importItems():
     pID = request.form['pID']
 
     if f.filename != '':
-        pID = Item.importItems(request.form['pID'], f)
+        pID = Item.importItems(request.form['pID'], f, difficultyRef )
 
 
     return redirect (f"/viewproject/{pID}/")

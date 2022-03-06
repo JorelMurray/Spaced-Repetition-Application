@@ -70,7 +70,7 @@ class Item:
         return cls(result[0])
     
     @classmethod
-    def importItems(cls, pID, f):
+    def importItems(cls, pID, f,  difficultyRef):
 
         df = pd.read_excel(f)
 
@@ -79,10 +79,12 @@ class Item:
 
         for ind in df.index:
 
+            difficulty = Item.getKey(list(difficultyRef.keys()), list(difficultyRef.values()), df['Difficulty'][ind], 0)
+            print(difficulty)
             item = {    
                 'itemName' : df['Item'][ind],
                 'category' : df['Category'][ind],
-                'difficultyLevel' : df['Difficulty'][ind],
+                'difficultyLevel' : difficulty,
                 'itemURL' : df['URL'][ind],
                 'projectId': pID
             }
@@ -91,6 +93,18 @@ class Item:
             connectToMySQL(cls.db).query_db( query, item )
             
         return pID
+
+    @classmethod
+    def getKey(cls, keyList, valueList, val, ind):
+
+        if valueList[ind] == val:
+            return keyList[ind]
+
+        if len(valueList) <= ind:
+            return 0
+
+            
+        return Item.getKey(keyList, valueList, val, ind + 1)
 
     @classmethod
     def deleteItem(cls, data ):
@@ -110,6 +124,16 @@ class Item:
 
     @classmethod
     def deleteProjectItems(cls, data ):
+        query = "SELECT id from items where projectID = %(id)s"
+
+        results = connectToMySQL(cls.db).query_db( query, data )
+
+        for row in results:
+            itemData = {
+                'id' : row['id']
+            }
+            Item.deleteItemHistory(itemData)
+
         query = "DELETE FROM items where projectId = %(id)s;"
         
         # data is a dictionary that will be passed into the save method from server.py
